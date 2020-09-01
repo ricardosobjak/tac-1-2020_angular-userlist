@@ -1,0 +1,44 @@
+<h3 class="my-4">
+  Users
+  <button class="btn btn-primary" [routerLink]="['new']" routerLinkActive="router-link-active" >
+    <i class="fas fa-plus-circle"></i> Novo
+  </button>
+</h3>
+
+<div class="container">
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th></th>
+        <th>Nome</th>
+        <th>E-mail</th>
+        <th></th>
+      </tr>
+    </thead>
+    <thead>
+      <tr>
+        <td>a</td>
+        <td>b</td>
+        <td>c</td>
+        <td>
+          <button class="btn btn-light"><i class="fas fa-trash"></i></button>
+        </td>
+      </tr>
+    </thead>
+  </table>
+
+  <nav aria-label="Navigation">
+    <ul class="pagination justify-content-center">
+      <li class="page-item"><a class="page-link" href="#">1</a></li>
+      <li class="page-item"><a class="page-link" href="#">2</a></li>
+      <li class="page-item"><a class="page-link" href="#">3</a></li>
+      <li>
+        <select class="form-control ml-2">
+          <option value="5">5</option>
+          <option value="10">10</option>
+          <option value="15">15</option>
+        </select>
+      </li>
+    </ul>
+  </nav>
+</div>

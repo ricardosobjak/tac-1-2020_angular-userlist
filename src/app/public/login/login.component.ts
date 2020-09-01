@@ -1,5 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { LoginService } from '../login.service';
+
+interface LoginResponse {
+  token: string;
+}
 
 @Component({
   selector: 'app-login',
@@ -11,7 +16,12 @@ export class LoginComponent implements OnInit {
   loading = false;
   form: FormGroup;
 
-  constructor(private formBuilder: FormBuilder) {}
+  message;
+
+  constructor(
+    private formBuilder: FormBuilder,
+    private loginService: LoginService
+  ) {}
 
   ngOnInit(): void {
     this.form = this.formBuilder.group({
@@ -27,6 +37,7 @@ export class LoginComponent implements OnInit {
   }
 
   public onSubmit = () => {
+    this.message = undefined;
     this.submitted = true;
 
     if (this.form.invalid) return;
@@ -34,5 +45,25 @@ export class LoginComponent implements OnInit {
     console.log('onSubmit');
     console.log(this.form.valid);
     console.log(this.form.value.username);
+    console.log(this.form);
+
+    this.loading = true;
+
+    this.loginService
+      .login(this.form.value.username, this.form.value.password)
+      .toPromise()
+      .then((res: LoginResponse) => {
+        console.log(res);
+        localStorage.setItem('token', res.token);
+      })
+      .catch((err) => {
+        console.log(err);
+        this.message = err.error.error.toString();
+      })
+      .finally(() => {
+        this.loading = false;
+      });
+
+    console.log("depois da requisição")
   };
 }

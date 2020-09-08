@@ -3,15 +3,20 @@
 </h3>
 
 <div class="container">
-  <form>
+  <form [formGroup]="form">
     <div class="form-group">
       <label>Primeiro nome</label>
-      <input type="text" class="form-control" placeholder="Fulano" />
+      <input
+        type="text"
+        class="form-control"
+        placeholder="Fulano"
+        formControlName="firstname"
+      />
     </div>
 
     <div class="form-group">
       <label>Sobrenome</label>
-      <input type="text" class="form-control" placeholder="de Tal" />
+      <input type="text" class="form-control" placeholder="de Tal" formControlName="lastname" />
     </div>
 
     <div class="form-group">
@@ -20,16 +25,17 @@
         type="text"
         class="form-control"
         placeholder="username@provedor.com"
+        formControlName="email"
       />
     </div>
 
-    <button class="btn btn-success" style="min-width: 100px;">
+    <button class="btn btn-success" style="min-width: 100px" (click)="saveOrUpdate()">
       <i class="fas fa-check-circle"></i> Salvar
     </button>
 
     <button
       class="btn btn-light ml-2"
-      style="min-width: 100px;"
+      style="min-width: 100px"
       [routerLink]="['/app/user']"
       routerLinkActive="router-link-active"
     >

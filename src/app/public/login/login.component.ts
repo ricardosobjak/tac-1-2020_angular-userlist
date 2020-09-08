@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { LoginService } from '../login.service';
+import { Router } from '@angular/router';
 
 interface LoginResponse {
   token: string;
@@ -20,7 +21,8 @@ export class LoginComponent implements OnInit {
 
   constructor(
     private formBuilder: FormBuilder,
-    private loginService: LoginService
+    private loginService: LoginService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -55,6 +57,8 @@ export class LoginComponent implements OnInit {
       .then((res: LoginResponse) => {
         console.log(res);
         localStorage.setItem('token', res.token);
+        this.loginService.currentTokenValue = res.token;
+        this.router.navigate(['/app']);
       })
       .catch((err) => {
         console.log(err);
@@ -64,6 +68,6 @@ export class LoginComponent implements OnInit {
         this.loading = false;
       });
 
-    console.log("depois da requisição")
+    console.log('depois da requisição');
   };
 }

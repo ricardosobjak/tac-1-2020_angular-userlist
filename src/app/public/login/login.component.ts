@@ -27,7 +27,7 @@ export class LoginComponent implements OnInit {
 
   ngOnInit(): void {
     this.form = this.formBuilder.group({
-      username: this.formBuilder.control('', [
+      username: this.formBuilder.control('eve.holt@reqres.in', [
         Validators.required,
         Validators.email,
       ]),

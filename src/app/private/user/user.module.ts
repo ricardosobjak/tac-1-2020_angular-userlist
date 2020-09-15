@@ -1,9 +1,7 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { UserListComponent } from './user-list/user-list.component';
 import { UserFormComponent } from './user-form/user-form.component';
 import { Routes, RouterModule } from '@angular/router';
-import { UserService } from './user.service';
 import { SharedModule } from 'src/app/shared/shared.module';
 
 const routes: Routes = [

@@ -5,9 +5,18 @@ export class User {
   last_name: string;
   avatar: string;
   job: string;
+
+  get name() {
+    return this.first_name + ' ' + this.last_name;
+  }
 }
 
-export class UserListResponse {
+export interface SingleUserResponse {
+  data: User;
+  ad: [];
+}
+
+export interface UserListResponse {
   page: number;
   per_page: number;
   total: number;

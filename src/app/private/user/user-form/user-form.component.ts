@@ -1,13 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import {
-  FormBuilder,
-  FormGroup,
-  FormControl,
-  Validators,
-} from '@angular/forms';
-import { User } from '../user.model';
+import { FormGroup, FormBuilder } from '@angular/forms';
 import { UserService } from '../user.service';
+import { User, SingleUserResponse } from '../user.model';
 
 @Component({
   selector: 'app-user-form',
@@ -15,54 +10,82 @@ import { UserService } from '../user.service';
   styleUrls: ['./user-form.component.css'],
 })
 export class UserFormComponent implements OnInit {
-  state: string;
-  form: FormGroup; // Reactive form, campos do formulário
+  state;
+
+  form: FormGroup;
+
+  user: User;
 
   constructor(
-    private route: ActivatedRoute,
-    private formBuider: FormBuilder,
     private userService: UserService,
-    private router: Router
+    private route: ActivatedRoute,
+    private router: Router,
+    private formBuilder: FormBuilder
   ) {}
 
+  get title() {
+    if (this.state === 'new') return 'New user';
+    if (this.state === 'edit') return 'Edit user';
+    return 'User';
+  }
+
   ngOnInit(): void {
+    this.form = this.formBuilder.group({
+      firstName: this.formBuilder.control(''),
+      lastName: this.formBuilder.control(''),
+      email: this.formBuilder.control(''),
+      job: this.formBuilder.control(''),
+    });
+
     this.route.params.subscribe((params) => {
       console.log(params);
 
-      if (!params.id) this.state = 'new';
-      else this.state = 'edit';
+      if (!params.id) {
+        this.state = 'new';
+      } else {
+        this.userService
+          .getUser(params['id'])
+          .toPromise()
+          .then((res: SingleUserResponse) => {
+            this.user = res.data;
+            this.state = 'edit';
+            this.updateForm(this.user);
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+      }
     });
+  }
 
-    this.form = this.formBuider.group({
-      firstname: new FormControl('', [Validators.required]),
-      lastname: this.formBuider.control('', Validators.required),
-      email: '',
-    });
+  updateForm(user: User) {
+    this.form.controls.firstName.setValue(user.first_name);
+    this.form.controls.lastName.setValue(user.last_name);
+    this.form.controls.email.setValue(user.email);
+    this.form.controls.job.setValue(user.job);
   }
 
   saveOrUpdate() {
-    const user = new User();
-    user.first_name = this.form.value.firstname;
-    user.last_name = this.form.value.lastname;
-    user.email = this.form.value.email;
+    const u = new User();
+    u.first_name = this.form.value.firstName;
+    u.last_name = this.form.value.lastName;
+    u.email = this.form.value.email;
+
+    if (this.user) u.id = this.user.id;
 
     this.userService
-      .save(user)
+      .createOrUpdate(u)
       .toPromise()
-      .then((result: User) => {
-        console.log(result);
-        this.router.navigateByUrl('/app/user');
+      .then((res) => {
+        console.log(res);
+        alert('Usuário salvo com sucesso');
       })
       .catch((err) => {
         console.log(err);
-        alert('Erro ao inserir usuário');
+        alert('Falha ao salvar o usuário');
       })
       .finally(() => {
-        console.log('terminou');
+        this.router.navigateByUrl('/app/user');
       });
-  }
-
-  get title() {
-    return this.state === 'new' ? 'New user' : 'Edit user';
   }
 }
